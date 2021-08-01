@@ -1,23 +1,40 @@
+import React, {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { Upload } from "@aws-sdk/lib-storage";
+import { S3Client, S3 } from "@aws-sdk/client-s3";
 
 function App() {
+  const [file,setFile] = useState();
+  function fileChange(e){
+    var file = e.target.files[0];
+    // console.log(e.target.files[0])
+
+    const target = { Bucket:"mathe-s3-sagemaker", Key:file.name, Body:file};
+    const creds = {accessKeyId: "AKIARJOTDA4WHIP5IKKV",secretAccessKey:"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"};
+    try {
+      const parallelUploads3 = new Upload({
+        client: new S3Client({region:"us-east-1",credentials:creds}),
+        leavePartsOnError: false, // optional manually handle dropped parts
+        params: target,
+      });
+
+      parallelUploads3.on("httpUploadProgress", (progress) => {
+        console.log(progress);
+      });
+
+      parallelUploads3.done();
+    } catch (e) {
+      console.log(e);
+    }
+
+
+
+
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input type="file" id="file" onChange={fileChange}/>  
     </div>
   );
 }
