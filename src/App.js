@@ -10,8 +10,8 @@ function App() {
     var file = e.target.files[0];
     // console.log(e.target.files[0])
 
-    const target = { Bucket:"mathe-s3-sagemaker", Key:file.name, Body:file};
-    const creds = {accessKeyId: "AKIARJOTDA4WHIP5IKKV",secretAccessKey:"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"};
+    const target = { Bucket:"", Key:file.name, Body:file};
+    const creds = {accessKeyId: "",secretAccessKey:""};
     try {
       const parallelUploads3 = new Upload({
         client: new S3Client({region:"us-east-1",credentials:creds}),
